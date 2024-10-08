@@ -40,7 +40,6 @@ func (i UserRepositoryImpl) CreateUser(user model.User) (model.User, error) {
 }
 
 func (i UserRepositoryImpl) UpdateUser(userInfo model.User) error {
-
 	if err := i.db.Save(&userInfo).Error; err != nil {
 		return fmt.Errorf("failed to update user")
 	}

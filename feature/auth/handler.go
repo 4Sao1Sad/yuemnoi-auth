@@ -96,7 +96,7 @@ func (h *AuthHandler) OAuthCallback(c *fiber.Ctx) error {
 	cookie.SameSite = "Strict" // Prevent CSRF
 	c.Cookie(cookie)
 
-	return c.Redirect("/", 302)
+	return c.Redirect("http://localhost:5173/", 302)
 }
 
 func createToken(userID int, config *config.Config) (string, error) {

@@ -4,3 +4,4 @@ config/**.yaml
 .pnp.cjs
 .yarn
 .goreload.exe
+sa-notification.json

@@ -48,5 +48,6 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 		userRouter.Patch("/:id", h.userHandler.UpdateUser)
 		userRouter.Delete("/:id", h.userHandler.DeleteUser)
 		userRouter.Get("/email/:email", h.userHandler.GetUserByEmail)
+		userRouter.Get("/me", h.userHandler.GetMe)
 	}
 }

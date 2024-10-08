@@ -15,6 +15,30 @@ func NewUserHandler(UserRepository UserRepository) *UserHandler {
 	return &UserHandler{UserRepository}
 }
 
+func (h UserHandler) GetMe(c *fiber.Ctx) error {
+	userIdRaw := c.Locals("user_id")
+	userIdStr, ok := userIdRaw.(string)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "User not authenticated",
+		})
+	}
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid user ID format",
+		})
+	}
+
+	user, err := h.UserRepository.GetUserById(userId)
+	if err != nil {
+		return c.Status(404).JSON(fiber.Map{
+			"message": "User not found",
+		})
+	}
+	return c.Status(200).JSON(user)
+}
+
 func (h UserHandler) GetUserById(c *fiber.Ctx) error {
 	userIdStr := c.Params("id")
 	userId, err := strconv.Atoi(userIdStr)
@@ -24,7 +48,6 @@ func (h UserHandler) GetUserById(c *fiber.Ctx) error {
 		})
 	}
 	user, err := h.UserRepository.GetUserById(userId)
-
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": "User not found",
@@ -44,7 +67,6 @@ func (h UserHandler) GetUsers(c *fiber.Ctx) error {
 }
 
 func (h UserHandler) UpdateUser(c *fiber.Ctx) error {
-
 	params := c.Params("id")
 	userId, err := strconv.Atoi(params)
 	if err != nil {
@@ -77,6 +99,7 @@ func (h UserHandler) UpdateUser(c *fiber.Ctx) error {
 
 	return c.Status(204).JSON(fiber.Map{})
 }
+
 func (h UserHandler) DeleteUser(c *fiber.Ctx) error {
 	userIdStr := c.Params("id")
 	userId, err := strconv.Atoi(userIdStr)
