@@ -26,7 +26,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (i UserRepositoryImpl) GetUserById(userId int) (model.User, error) {
 	var user model.User
-	if err := i.db.Where("id = ?", userId).Find(&user).Error; err != nil {
+	if err := i.db.Where("id = ?", userId).First(&user).Error; err != nil {
 		return model.User{}, err
 	}
 	return user, nil
