@@ -13,6 +13,8 @@ type Config struct {
 	Cookie            Cookie            `mapstructure:"cookie"`
 	Environment       string            `mapstructure:"environment"`
 	AppName           string            `mapstructure:"appName"`
+	Host              string            `mapstructure:"host"`
+	Port              string            `mapstructure:"port"`
 }
 type Cookie struct {
 	CookieNameAuth string        `mapstructure:"cookieNameAuth"`

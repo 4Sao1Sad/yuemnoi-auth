@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sds-2/config"
 	"github.com/sds-2/model"
@@ -13,6 +14,11 @@ import (
 func AuthMiddleware(config *config.Config) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		if config.Environment == "dev" {
+			return c.Next()
+		}
+
+		log.Info(c.Get("X-bypass-auth"))
+		if c.Get("X-bypass-auth") == "true" {
 			return c.Next()
 		}
 

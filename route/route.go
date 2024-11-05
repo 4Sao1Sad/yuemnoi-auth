@@ -44,10 +44,10 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 	{
 		userRouter := r.Group("/user", middleware.AuthMiddleware(cfg))
 		userRouter.Get("/", h.userHandler.GetUsers)
+		userRouter.Get("/me", h.userHandler.GetMe)
+		userRouter.Get("/email/:email", h.userHandler.GetUserByEmail)
 		userRouter.Get("/:id", h.userHandler.GetUserById)
 		userRouter.Patch("/:id", h.userHandler.UpdateUser)
 		userRouter.Delete("/:id", h.userHandler.DeleteUser)
-		userRouter.Get("/email/:email", h.userHandler.GetUserByEmail)
-		userRouter.Get("/me", h.userHandler.GetMe)
 	}
 }
