@@ -11,4 +11,5 @@ type GetReviewsByUserIdResponse struct {
 	Rating       int    `json:"rating"`
 	Description  string `json:"description"`
 	ReviewerID   int    `json:"reviewer_id"`
+	ReviewerName string `json:"reviewer_name"`
 }

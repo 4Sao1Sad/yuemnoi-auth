@@ -47,7 +47,7 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.Handler, err erro
 
 	// handler
 	itemHandler := item.NewItemHandler(itemDomain)
-	reviewHandler := review.NewReviewHandler(reviewRepository)
+	reviewHandler := review.NewReviewHandler(userRepository, reviewRepository)
 	authHandler := auth.NewAuthHandler(cfg, userRepository)
 	userHandler := user.NewUserHandler(userRepository)
 

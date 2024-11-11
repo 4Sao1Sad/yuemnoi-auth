@@ -4,15 +4,18 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/sds-2/feature/user"
 	"github.com/sds-2/model"
 )
 
 type ReviewHandler struct {
 	reviewRepository ReviewRepository
+	userRepository   user.UserRepository
 }
 
-func NewReviewHandler(reviewRepository ReviewRepository) *ReviewHandler {
+func NewReviewHandler(userRepository user.UserRepository, reviewRepository ReviewRepository) *ReviewHandler {
 	return &ReviewHandler{
+		userRepository:   userRepository,
 		reviewRepository: reviewRepository,
 	}
 }
@@ -25,19 +28,29 @@ func (h *ReviewHandler) GetReviewsByUserId(c *fiber.Ctx) error {
 			"error": "Invalid user ID",
 		})
 	}
+
 	reviews, err := h.reviewRepository.GetReviewsByUserId(userId)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Unable to retrieve reviews",
 		})
 	}
+
 	var response []GetReviewsByUserIdResponse
 	for _, review := range reviews {
+		user, err := h.userRepository.GetUserById(review.ReviewerID)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Unable to retrieve user",
+			})
+		}
+
 		response = append(response, GetReviewsByUserIdResponse{
-			ID:          review.ID,
-			Rating:      review.Rating,
-			Description: review.Description,
-			ReviewerID:  review.ReviewerID,
+			ID:           review.ID,
+			Rating:       review.Rating,
+			Description:  review.Description,
+			ReviewerID:   review.ReviewerID,
+			ReviewerName: user.Name,
 		})
 	}
 	return c.Status(200).JSON(response)
