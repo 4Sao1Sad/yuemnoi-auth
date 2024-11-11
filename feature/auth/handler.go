@@ -93,8 +93,10 @@ func (h *AuthHandler) OAuthCallback(c *fiber.Ctx) error {
 	if h.cfg.Environment == "dev" || h.cfg.Environment == "test" {
 		cookie.Secure = false
 	}
-	cookie.SameSite = "Strict" // Prevent CSRF
+	cookie.SameSite = "None" // Prevent CSRF
 	c.Cookie(cookie)
+	fmt.Println("Cookie:", cookie)
+	fmt.Println("request", c)
 
 	return c.Redirect("http://localhost:3000/", 302)
 }

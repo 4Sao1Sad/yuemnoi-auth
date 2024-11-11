@@ -42,7 +42,7 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 		authRouter.Get("/google/callback", h.authHandler.OAuthCallback)
 	}
 	{
-		userRouter := r.Group("/user", middleware.AuthMiddleware(cfg))
+		userRouter := r.Group("/user")
 		userRouter.Get("/", h.userHandler.GetUsers)
 		userRouter.Get("/me", h.userHandler.GetMe)
 		userRouter.Get("/email/:email", h.userHandler.GetUserByEmail)
