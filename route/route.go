@@ -32,7 +32,7 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 		itemRouter.Get("/", h.itemHandler.GetAllitem)
 	}
 	{
-		reviewRouter := r.Group("/review",)
+		reviewRouter := r.Group("/review")
 		reviewRouter.Get("/user/:userId", h.reviewHandler.GetReviewsByUserId)
 		reviewRouter.Post("/", h.reviewHandler.CreateReview)
 	}
@@ -43,11 +43,11 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 	}
 	{
 		userRouter := r.Group("/user")
-		userRouter.Get("/", h.userHandler.GetUsers)
 		userRouter.Get("/me", h.userHandler.GetMe)
 		userRouter.Get("/email/:email", h.userHandler.GetUserByEmail)
 		userRouter.Get("/:id", h.userHandler.GetUserById)
 		userRouter.Patch("/:id", h.userHandler.UpdateUser)
 		userRouter.Delete("/:id", h.userHandler.DeleteUser)
+		userRouter.Get("/", h.userHandler.GetUsers)
 	}
 }
