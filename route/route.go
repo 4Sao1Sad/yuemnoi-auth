@@ -32,7 +32,7 @@ func (h *Handler) RegisterRouter(r fiber.Router, cfg *config.Config) {
 		itemRouter.Get("/", h.itemHandler.GetAllitem)
 	}
 	{
-		reviewRouter := r.Group("/review", middleware.AuthMiddleware(cfg))
+		reviewRouter := r.Group("/review",)
 		reviewRouter.Get("/user/:userId", h.reviewHandler.GetReviewsByUserId)
 		reviewRouter.Post("/", h.reviewHandler.CreateReview)
 	}

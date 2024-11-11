@@ -1,9 +1,10 @@
 package review
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/sds-2/model"
-	"strconv"
 )
 
 type ReviewHandler struct {
@@ -12,7 +13,7 @@ type ReviewHandler struct {
 
 func NewReviewHandler(reviewRepository ReviewRepository) *ReviewHandler {
 	return &ReviewHandler{
-		reviewRepository: reviewRepository, 
+		reviewRepository: reviewRepository,
 	}
 }
 
@@ -24,7 +25,7 @@ func (h *ReviewHandler) GetReviewsByUserId(c *fiber.Ctx) error {
 			"error": "Invalid user ID",
 		})
 	}
-    reviews, err := h.reviewRepository.GetReviewsByUserId(userId)
+	reviews, err := h.reviewRepository.GetReviewsByUserId(userId)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Unable to retrieve reviews",
@@ -33,23 +34,18 @@ func (h *ReviewHandler) GetReviewsByUserId(c *fiber.Ctx) error {
 	var response []GetReviewsByUserIdResponse
 	for _, review := range reviews {
 		response = append(response, GetReviewsByUserIdResponse{
-			ID: review.ID,
-			Rating:review.Rating,
-			Description:review.Description,
-			ReviewerID:review.ReviewerID,
+			ID:          review.ID,
+			Rating:      review.Rating,
+			Description: review.Description,
+			ReviewerID:  review.ReviewerID,
 		})
 	}
 	return c.Status(200).JSON(response)
 }
 
 func (h *ReviewHandler) CreateReview(c *fiber.Ctx) error {
-	userIdRaw := c.Locals("user_id") 
-	userIdStr, ok := userIdRaw.(string)
-	if !ok {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "User not authenticated",
-		})
-	}
+	userIdStr := c.Get("X-User-Id")
+
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -68,10 +64,10 @@ func (h *ReviewHandler) CreateReview(c *fiber.Ctx) error {
 		})
 	}
 	review := model.Review{
-		Rating:       body.Rating,
-		Description:  body.Description,
-		ReviewerID:   userId,
-		RevieweeID:   body.RevieweeID,
+		Rating:      body.Rating,
+		Description: body.Description,
+		ReviewerID:  userId,
+		RevieweeID:  body.RevieweeID,
 	}
 	err = h.reviewRepository.CreateReview(review)
 	if err != nil {
@@ -83,4 +79,3 @@ func (h *ReviewHandler) CreateReview(c *fiber.Ctx) error {
 		"message": "create review successfully",
 	})
 }
-
